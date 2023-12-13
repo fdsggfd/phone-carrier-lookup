@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phone Carrier Lookup</title>
+</head>
+<body>
+
+  <h2>Phone Carrier Lookup</h2>
+
+  <label for="phoneInput">Enter Phone Number:</label>
+  <input type="text" id="phoneInput" placeholder="e.g., +91...">
+
+  <button onclick="searchPhone()">Search</button>
+
+  <h3>Result:</h3>
+  <div id="output"></div>
+
+  <script>
+    function searchPhone() {
+      const phoneNumber = document.getElementById('phoneInput').value;
+      const outputDiv = document.getElementById('output');
+
+      const xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;
+
+      xhr.addEventListener('readystatechange', function () {
+        if (this.readyState === this.DONE) {
+          console.log(this.responseText); // Log the full response to the console
+
+          if (this.status === 200) {
+            const result = JSON.parse(this.responseText);
+
+            // Display all keys in the response with underline, bold, and colon
+            for (const key in result) {
+              outputDiv.innerHTML += `<p><u><b>${key}:</b></u> ${result[key]}</p>`;
+            }
+          } else {
+            outputDiv.innerHTML = '<p>Error fetching carrier information.</p>';
+          }
+        }
+      });
+
+      xhr.open('GET', `https://free-phone-carrier-lookup.p.rapidapi.com/num/${phoneNumber}`);
+      xhr.setRequestHeader('X-RapidAPI-Key', '9d0ef7fec0msh18533f2376236d7p165cfdjsnbd16386dfe29');
+      xhr.setRequestHeader('X-RapidAPI-Host', 'free-phone-carrier-lookup.p.rapidapi.com');
+      xhr.send();
+    }
+  </script>
+
+</body>
+</html>

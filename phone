@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phone Number Lookup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+
+    #output {
+      margin-top: 20px;
+    }
+
+    #output p span {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Phone Number Lookup</h1>
+  <form id="lookupForm">
+    <label for="phoneNumber">Enter Phone Number:</label>
+    <input type="text" id="phoneNumber" name="phoneNumber" required>
+    <button type="button" onclick="lookupPhoneNumber()">Search</button>
+  </form>
+  <div id="output"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    async function lookupPhoneNumber() {
+      const phoneNumber = document.getElementById('phoneNumber').value;
+
+      const options = {
+        method: 'GET',
+        url: 'https://free-phone-number-lookup-and-validation-api1.p.rapidapi.com/json',
+        params: {
+          number: phoneNumber
+        },
+        headers: {
+          'X-RapidAPI-Key': '9d0ef7fec0msh18533f2376236d7p165cfdjsnbd16386dfe29',
+          'X-RapidAPI-Host': 'free-phone-number-lookup-and-validation-api1.p.rapidapi.com'
+        }
+      };
+
+      try {
+        const response = await axios.request(options);
+        displayResults(response.data);
+      } catch (error) {
+        console.error(error);
+        displayError('An error occurred during the request.');
+      }
+    }
+
+    function displayResults(data) {
+      const outputDiv = document.getElementById('output');
+      outputDiv.innerHTML = `
+        <p><span>Number Type:</span> ${data.numberType}</p>
+        <p><span>Number Country Code:</span> ${data.numberCountryCode}</p>
+        <p><span>Carrier:</span> ${data.carrier}</p>
+        <p><span>Continent:</span> ${data.continent}</p>
+        <p><span>Country Name:</span> ${data.countryName}</p>
+        <p><span>Region:</span> ${data.region}</p>
+        <p><span>Region Name:</span> ${data.regionName}</p>
+        <p><span>City:</span> ${data.city}</p>
+        <p><span>Zip:</span> ${data.zip}</p>
+        <p><span>Number Valid:</span> ${data.numberValid}</p>
+      `;
+    }
+
+    function displayError(message) {
+      const outputDiv = document.getElementById('output');
+      outputDiv.innerHTML = `<p style="color: red;">${message}</p>`;
+    }
+  </script>
+</body>
+</html>

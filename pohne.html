@@ -15,12 +15,12 @@
   <button onclick="searchPhone()">Search</button>
 
   <h3>Result:</h3>
-  <div id="output"></div>
+  <pre id="output"></pre>
 
   <script>
     function searchPhone() {
       const phoneNumber = document.getElementById('phoneInput').value;
-      const outputDiv = document.getElementById('output');
+      const outputPre = document.getElementById('output');
 
       const xhr = new XMLHttpRequest();
       xhr.withCredentials = true;
@@ -30,14 +30,9 @@
           console.log(this.responseText); // Log the full response to the console
 
           if (this.status === 200) {
-            const result = JSON.parse(this.responseText);
-
-            // Display all keys in the response with underline, bold, and colon
-            for (const key in result) {
-              outputDiv.innerHTML += `<p><u><b>${key}:</b></u> ${result[key]}</p>`;
-            }
+            outputPre.textContent = this.responseText; // Display raw JSON
           } else {
-            outputDiv.innerHTML = '<p>Error fetching carrier information.</p>';
+            outputPre.textContent = `Error fetching carrier information. Status: ${this.status}`;
           }
         }
       });
